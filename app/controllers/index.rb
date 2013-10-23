@@ -1,3 +1,9 @@
+# In command line
+
+# export TWITTER_KEY=CvYJhI8Z26tUjtrLa2eQ
+# export TWITTER_SECRET=kImHEFFfZh9EHq0kIM3wXfCgvFmmdyUKZrKn3EYyp4
+# shotgun
+
 get '/' do
   erb :index
 end
@@ -20,6 +26,14 @@ get '/auth' do
 
   # at this point in the code is where you'll need to create your user account and store the access token
 
-  erb :index
-  
+  #find user...
+  @user = User.where(username: @access_token.params[:screen_name]).first_or_create(oauth_token: @access_token.params[:oauth_token],
+                       
+  # Is user valid?                                                                                 oauth_secret: @access_token.params[:oauth_token_secret])
+  if @user.valid?
+    #create sessions
+    session[:user_id] = @user.id
+    erb :index
+  end
 end
+
